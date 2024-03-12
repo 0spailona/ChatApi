@@ -47,10 +47,10 @@ function onRegister(ws, msg) {
         return;
     }
 
-    users[name] = { name: msg.user.name };
+    users[name] = {name: msg.user.name};
     ws.userName = name;
 
-    ws.send(JSON.stringify({type: "ok", command: "register", user:`${name}`}));
+    ws.send(JSON.stringify({type: "ok", command: "register", user: `${name}`}));
     broadcastData({type: "users", users: Object.values(users)});
 }
 
@@ -71,12 +71,12 @@ function onSend(ws, msg) {
         ws.send(JSON.stringify({type: "error", command: "send", reason: "Not registered"}));
         return;
     }
-
-    broadcastData({type: "message", from: ws.userName, data: msg.data});
+    msg.created = new Date().toISOString();
+    broadcastData({type: "message", from: ws.userName, data: msg.data, created: msg.created});
 }
 
 function logMessage(ws, msg) {
-  console.log(`Message from '${ws.userName}':`, msg);
+    console.log(`Message from '${ws.userName}':`, msg);
 }
 
 function onClientMessage(ws, data, isBinary) {
